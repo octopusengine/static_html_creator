@@ -2,24 +2,29 @@
 html_creator for automatic setup of very simple static pages
 2019-23
 
+py_html/html_creator.py
+www/main.css
+www/
+apps/test_html.py
+
 """
 import os
 import webbrowser
 
 
-__version__ = "0.2.1"
+__version__ = "0.2.3"
 
 DEBUG = True
 WIDTH = 60
 
 """
-ToDo
+ToDo:
 add js control / bootstrap etc.
 - show / hide
 - table
 - sort
-
 """
+
 
 
 class Html():
@@ -47,16 +52,32 @@ class Html():
         self.css_name = name
 
 
-    def add_head(self, label,level=2,link=""):
-        add = str(f"<h{str(level)}>{label}</h{str(level)}>\r\n")
+    def head(self, label,level=2,link="",cls=""):
+        if len(link) > 1:
+            add = f'<h{str(level)}><a class="{cls}" href="{link}">{label}</a></h{str(level)}\r\n'    
+        else:    
+            add = str(f"<h{str(level)}>{label}</h{str(level)}>\r\n")
+        
         self.temp_body += add
 
 
-    def add_text(self, content):
-        self.temp_body += content
+    def p_text(self, content, cls=""):
+        if len(cls) > 1:
+            add = str(f'<p class="{str(cls)}">{str(content)}</p>\r\n')
+        else:
+            add = str(f'<p>{str(content)}</p>\r\n')
+        self.temp_body += add
+
+
+    def text(self, content, cls=""):
+        if len(cls) > 1:
+            add = str(f'<span class="{str(cls)}">{str(content)}</span>\r\n')
+        else:
+            add = content
+        self.temp_body += add
 
     
-    def add_div_class(self,cls="",end=False):
+    def div_class(self,cls="",end=False):
         if end:
             self.temp_body += f'</div>\r\n'
         else:
@@ -66,16 +87,25 @@ class Html():
                 self.temp_body += f'<div>\r\n'
 
 
-    def add_paragraf(self, content):
+    def paragraf(self, content):
         self.temp_body += f'<p>{content}</p>\r\n'
 
 
-    def add_hr(self, cls=""):
-        self.temp_body += f'<hr>\r\n'
+    def hr(self, cls=""):
+        self.temp_body += f'<hr />\r\n'
+
+
+    def br(self, cls=""):
+        self.temp_body += f'<br />\r\n'
 
     
-    def add_link(self, label, link):
-        self.temp_body += f'<a href="{link}">{label}</p>\r\n'
+    def link(self, label, link):
+        self.temp_body += f'<a href="{link}">{label}</a>\r\n'
+
+
+    def img(self,img_link, img_size, cls=""):
+        self.temp_body += f'<img class="{cls}" src="{img_link}" {img_size}>\r\n'
+        # class="circle"
 
 
     def create_page(self):
@@ -88,6 +118,7 @@ class Html():
 <head>
     <meta charset="UTF-8">
     <title>"{self.html_name}"</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{self.css_name}">
 </head>
   
